@@ -180,21 +180,21 @@ In the `<script>` tag:
 
 1. Declare global variables for brickWidth, brickHeight, and brickGutter.
 
-2. Create an empty array called 'bricks' to store brick elements.
+2. Create an empty array called `bricks` to store brick elements.
 
 3. In `initState()`, add code to initialize the brick dimension variables based on gameUnit.
     - Brick width and height is 12 and 8 game units respectively.
     - Brick gutter (distance between bricks) is 2 game units.
 
 4. Create a `resetBricks()` function that:
-    - Clears the 'bricks' array.
+    - Clears the `bricks` array.
     - Calculates how many columns of bricks can fit in the game width.
     - Creates 10 rows of bricks:
         - Use a loop to create each brick.
         - Use `createDivElement()` to create each brick with appropriate styles.
         - Position each brick using absolute positioning.
         - Store each brick's position as data attributes (example brick.dataset.x = left).
-        - Add each brick to the 'bricks' array.
+        - Add each brick to the `bricks` array.
     - Create a left offset variable after the columns variable to center the bricks, and add the offset to left position of each brick.
     
 
@@ -205,7 +205,7 @@ In the `<script>` tag:
 ### Step 10: Brick Collision
 
 1. Create a `checkBrickCollision()` function that:
-    - Loops through the 'bricks' array (in reverse order).
+    - Loops through the `bricks` array (in reverse order).
     - For each brick, check if the ball's position overlaps with the brick's position.
     - If there's a collision:
         - Check which side of the brick the ball has hit, and update the speed of the ball accordingly.
@@ -233,7 +233,7 @@ In the `<script>` tag:
                 }
         ```
         - Remove the brick from the DOM.
-        - Remove the brick from the 'bricks' array.
+        - Remove the brick from the `bricks` array.
         - Increase the score.
         - Update the score display.
         - Reverse the ball's vertical direction.
@@ -251,7 +251,7 @@ In the `<script>` tag:
     - Updates the score display with a win message.
 
 2. In `moveBall()`, after `checkBrickCollision()`:
-    - Check if the 'bricks' array is empty.
+    - Check if the `bricks` array is empty.
     - If it is, call `winGame()`.
 
 **Check Point 11:** Break all the bricks. The game should end with a win message when all bricks are destroyed.
@@ -280,4 +280,4 @@ In the `<script>` tag:
 
 ## Scoring
 
-- Each step has 9 points, except the last one which has 11 points (extra credits).
+Each step has 9 points, except the last one which has 11 points (extra credits).
