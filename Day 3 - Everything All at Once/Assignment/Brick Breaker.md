@@ -5,6 +5,8 @@
 
 In this assignment, you will create a classic Brick Breaker game using HTML, CSS, and JavaScript. The game consists of a ball, a movable slate (paddle), and a set of bricks. The objective is to break all the bricks using the ball while preventing it from falling below the slate.
 
+![Gif](brick-breaker.gif)
+
 ## Game Rules and How to Play
 
 1. The game starts when the player presses the Enter key or Space bar.
