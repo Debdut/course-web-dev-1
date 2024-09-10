@@ -1,0 +1,23 @@
+- There are 10 steps to this assigments
+- 10th one is for extra points,first 9 mandatory
+- Each assigment step has a md file, example 10.md
+- Points for each assignment step is 10
+- Points will be deducted if your html don't match the views, or there are any errors, or you fail to write semantic html, or it lacks functionality
+- You must be only using the terminal and VS Code (not even File Explorer)
+- Attach your terminal transcripts as you work
+- Do assignment step by step, you can't do 2.md before 1.md
+- You can search the internet, ask course mates for help
+- Download and copy the Assignments directory into Day folder (Day 1, for example)
+- Assignments is the parent directory
+- Do all your work in the Assignments directory, not in this instructions directory
+- When you're done, compress Assignments using zip and submit that zip file
+- zip -r Assignments.zip Assignments
+- Submit by Saturday 11:59PM, submissions after that won't be taken into account
+- Submit by direct message in Slack to me
+- You are encouraged to discuss and get help from course mates as much as possible
+- If you couldn't solve a problems, ask your peers
+- You'll need lots of Google search for this assignment
+
+
+- Project: 
+- A wiki for plant lovers, helping them to grow plants

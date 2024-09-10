@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic CSS</title>
+</head>
+<body>
+    <p>This is a line with default font size</p>
+    <p style="font-size:16px">This is a line with font size 16px</p>
+    <p style="font-size:20px">This is a line with font size 20px</p>
+    <p style="font-size:40px">This is a line with font size 40px</p>
+
+    <p>This is a line with default font family</p>
+    <p style="font-family:monospace">This is a line with monospace font family</p>
+    <p style="font-family:serif">This is a line with serif font family</p>
+    <p style="font-family:sans-serif">This is a line with sans-serif font family</p>
+    <p style="font-family:cursive">This is a line with cursive font family</p>
+
+    <p style="font-family: 'Menlo'" >This is a line with Menlo font family</p>
+    <p style="font-family: Helvetica, Menlo">This is a line with Helvetica font, and Menlo as fallback</p>
+    
+    <p style="color: red">This is a line with red color</p>
+    <p style="color: red; background-color: green">This is a line with red color and green background</p>
+
+    <p style="font-weight: bold">This is a line with thin font weight</p>
+    <p style="text-decoration: underline">This is a line with underline</p>
+    <p style="text-transform: uppercase">This is a line with uppercase text</p>
+    <p style="letter-spacing: 25%">This is a line with 200% letter spacing</p>
+
+    <p>This is a line <span style="font-weight: bold; color: red; background-color: green">with a bold and red part with green bg</span> and then a normal part</p>
+
+<!-- style="property: value; property: value" -->
+
+    <p style="background-color: red;">This is a line</p>
+    <p style="background-color: red;">This is another line</p>
+    <p style="background-color: red;">This is another line</p>
+    <p style="background-color: red;">This is another line</p>
+    <p style="background-color: red;">This is another line</p>
+    
+    <div style="background-color: red; color: white; padding: 10px; padding-left: 30px; text-align: right; padding-right: 30px;">
+        <p>This is a line</p>
+        <p>This is another line</p>
+        <p>This is another line</p>
+        <p>This is another line</p>
+        <p>This is another line</p>
+    </div>
+
+    <br>
+    <br>
+
+
+    <div style="background-color: cyan; padding: 10px">
+        This is a div
+    </div>
+
+    <br>
+
+    <span style="background-color: cyan; padding: 10px;">
+        This is a span
+    </span>
+
+    <br>
+    <br>
+    <br>
+
+    <span style="background-color: cyan; padding: 10px; color: white">
+        <span style="background-color: blue; padding: 10px;">
+            This is a span within a span
+        </span>
+    </span>
+
+    <br>
+    <br>
+
+    <div style="background-color: cyan; padding: 10px; color: white">
+        <div style="background-color: blue; padding: 10px;">
+            This is a div within a div
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+    <div id="box1" class="box p-5">
+        <p>This is a box</p>
+    </div>
+    <br>
+    <br>
+    <div id="box2" class="box">
+        <p>This is a box</p>
+    </div>
+    <style>
+        .box {
+            background-color: green;
+            color: white;
+            display: inline-block;
+        }
+        #box1 {
+            background-color: red;
+            margin-bottom: 30px;
+            float: right;
+            margin-right: 30px;
+            border: 5px ;
+        }
+        #box2 {
+            background-color: blue;
+        }
+        .box {
+            background-color: cyan;
+        }
+        #box1 {
+            background-color: cyan;
+        }
+        .p-0 {
+            padding: 0;
+        }
+
+        .p-1 {
+            padding: 2px;
+        }
+
+        .p-2 {
+            padding: 4px;
+        }
+
+        .p-3 {
+            padding: 6px;
+        }
+
+        .p-4 {
+            padding: 8px;
+        }
+
+        .p-5 {
+            padding: 10px;
+        }
+    </style>
+
+    <!-- padding: vertical horizontal -->
+    <span style="padding: 5px 30px; background-color: cyan;"> Hello </span>
+
+    <!-- padding: top horizontal bottom -->
+    <span style="padding: 0px 0px 30px; background-color: cyan;"> Hello </span>
+
+    <!-- padding: top right bottom left -->
+    <span style="padding: 0px 30px 0px 0px; background-color: cyan;"> Hello </span>
+
+    <hr>
+    <br>
+    <br>
+    <br>
+
+    <!-- Box-->
+    <div style="background-color: green; height: 100px; width: 100px;"></div>
+
+    <br>
+    <!-- Rectangle -->
+    <div style="background-color: green; height: 50px; width: 100px;"></div>
+
+    <br>
+    <!-- Box with border -->
+    <div style="background-color: green; height: 100px; width: 100px; border: 5px solid red; margin: 0 auto;"></div>
+
+    <br>
+
+    <!-- Rounded Rectangle -->
+    <div style="background-color: green; height: 100px; width: 100px; border-radius: 10px;"></div>
+
+    <br>
+
+    <!-- Circle -->
+    <div style="background-color: green; height: 100px; width: 100px; border-radius: 100%;"></div>
+
+    <br>
+
+    <!-- Ellipse -->
+    <div style="background-color: green; height: 100px; width: 200px; border-radius: 50%;"></div>
+
+    <br>
+
+    <!-- Triangle -->
+    <br>
+
+    <div style="background-color: inherit; height: 0px; width: 0px; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 50px solid;">  </div>
+
+    <br>
+    <div style="background: inherit; height: 0; width: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 100px solid red;"></div>
+
+    <br>
+
+    <!-- Right Triangle -->
+    <div style="background: inherit; height: 0; width: 0; border-left: 50px solid transparent; border-right: 50px solid; border-bottom: 100px solid transparent; transform: rotate(180deg);"></div>
+
+    
+</body>
+</html>
