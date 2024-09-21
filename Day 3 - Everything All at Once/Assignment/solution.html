@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick Breaker Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        #game {
+            position: absolute;
+            width: 100%;
+        }
+        #scoreDisplay {
+            text-align: center;
+            font-size: 24px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scoreDisplay">Score: 0</div>
+    <div id="game"></div>
+
+<script>
+    // Variables for game elements
+    const game = document.getElementById('game');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    let ball, slate, bricksGroup;
+    let bricks = [];
+    let score = 0,
+        isGameOver = false,
+        isGameStarted = false;
+
+    let 
+        gameHeight = 0, 
+        gameWidth = 0,
+        gameUnit = 0;
+
+    // Ball movement
+    let ballX = 0,
+        ballY = 0,
+        ballSpeedX = 0,
+        ballSpeedY = 0,
+        ballRadius = 0,
+        originalBallRadius = 0;
+
+    let brickWidth = 0,
+        brickHeight = 0,
+        brickGutter = 0;
+
+    // Slate movement
+    let slateWidth = 0,
+        slateHeight = 0,
+        slateX = 0;
+
+    // Power-up variables
+    let turnCount = 0;
+    let isPowerUp = false;
+
+    function initState() {
+        gameWidth = window.innerWidth;
+        gameHeight = window.innerHeight - 30;
+        gameUnit = Math.ceil(gameWidth / 1000);
+
+        score = 0;
+        isGameOver = false;
+        isGameStarted = false;
+
+        originalBallRadius = gameUnit * 8;
+        ballX = gameWidth / 2 - originalBallRadius;
+        ballY = gameHeight / 2;
+        ballSpeedX = gameUnit * 3;
+        ballSpeedY = -gameUnit * 3;
+        ballRadius = originalBallRadius;
+
+        slateWidth = gameUnit * 80;
+        slateHeight = gameUnit * 3;
+        slateX = gameWidth / 2 - slateWidth / 2;
+
+        brickWidth = gameUnit * 12;
+        brickHeight = gameUnit * 8;
+        brickGutter = gameUnit * 2;
+
+        turnCount = 0;
+        isPowerUp = false;
+    }
+
+    // Initialize game
+    function initGame() {
+        initState();
+
+        game.style.width = `${gameWidth+2}px`;
+        game.style.height = `${gameHeight}px`;
+        scoreDisplay.textContent = `Score: ${score}`;
+        createGameElements();
+        updateSlatePosition();
+        updateBallPosition();
+    }
+
+    // Create game elements dynamically in JS
+    function createGameElements() {
+        game.innerHTML = '';
+        bricksGroup = createDivElement('bricks');
+        ball = createDivElement('ball', {
+            width: `${ballRadius * 2}px`,
+            height: `${ballRadius * 2}px`,
+            backgroundColor: 'black',
+            borderRadius: '50%',
+            position: 'absolute'
+        });
+        slate = createDivElement('slate', {
+            width: `${slateWidth}px`,
+            height: `${slateHeight}px`,
+            backgroundColor: 'blue',
+            position: 'absolute',
+            bottom: '5px'
+        });
+        resetBricks();
+    }
+
+    // Create a div with specified CSS
+    function createDivElement(id, styles) {
+        const div = document.createElement('div');
+        div.id = id;
+        Object.assign(div.style, styles);
+        game.appendChild(div);
+        return div;
+    }
+
+    // Create and position bricks in three stacks
+    function resetBricks() {
+        bricks = [];
+        const columns = Math.floor(gameWidth / (brickWidth + brickGutter));
+        const leftPadding = (gameWidth 
+            - (columns * (brickWidth + brickGutter)
+             - brickGutter)) / 2;
+        
+        for (let row = 0; row < 10; row++) { // Number of rows
+            for (let col = 0; col < columns; col++) {
+                const brick = document.createElement('div');
+                const left = leftPadding + col * (brickWidth + brickGutter);
+                const top = row * (brickHeight + brickGutter);
+                Object.assign(brick.style, {
+                    width: `${brickWidth}px`,
+                    height: `${brickHeight}px`,
+                    backgroundColor: 'red',
+                    position: 'absolute',
+                    borderBottom: '0',
+                    left: `${left}px`, // Offset each section
+                    top: `${top}px`
+                });
+                brick.dataset.x = left;
+                brick.dataset.y = top;
+                bricksGroup.appendChild(brick);
+                bricks.push(brick);
+            }
+        }
+    }
+
+    // Ball logic and movement
+    function moveBall() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+
+        // Wall collisions
+        if (ballX <= 0 || ballX + ballRadius * 2 >= gameWidth) {
+            ballSpeedX = -ballSpeedX;
+        }
+        if (ballY <= 0) {
+            ballSpeedY = -ballSpeedY;
+        }
+        if (ballY + ballRadius * 2 >= gameHeight) {
+            endGame();
+            return
+        }
+
+        // Slate collision
+        if (checkSlateCollision()) {
+            ballSpeedY = -Math.abs(ballSpeedY); // Ensure the ball always bounces upward
+            // Adjust horizontal speed based on where the ball hits the slate
+            const hitPosition = (ballX + ballRadius - slateX) / slateWidth;
+            ballSpeedX = gameUnit * 6 * (hitPosition - 0.5); // Max speed at edges, slower in middle
+            
+            // Increment turn count and check for power-up
+            turnCount++;
+            if (turnCount % 5 === 0) {
+                activatePowerUp();
+            } else {
+                deactivatePowerUp();
+            }
+        }
+
+        if (bricks.length === 0) {
+            winGame();
+            return 
+        }
+        checkBrickCollision();
+        updateBallPosition();
+    }
+
+    // Activate power-up
+    function activatePowerUp() {
+        isPowerUp = true;
+        ballRadius = originalBallRadius * 1.5;
+        ball.style.width = `${ballRadius * 2}px`;
+        ball.style.height = `${ballRadius * 2}px`;
+        ballY -= ballRadius * 2;
+        ball.style.backgroundColor = 'gold';
+    }
+
+    // Deactivate power-up
+    function deactivatePowerUp() {
+        isPowerUp = false;
+        ballRadius = originalBallRadius;
+        ball.style.width = `${ballRadius * 2}px`;
+        ball.style.height = `${ballRadius * 2}px`;
+        ball.style.backgroundColor = 'black';
+    }
+
+    // Collision with slate
+    function checkSlateCollision() {
+        return (
+            ballY + ballRadius * 2 >= gameHeight - slateHeight &&
+            ballY + ballRadius * 2 <= gameHeight &&
+            ballX + ballRadius * 2 > slateX &&
+            ballX < slateX + slateWidth
+        );
+    }
+
+    // Collision with bricks
+    function checkBrickCollision() {
+        for (let i = bricks.length - 1; i >= 0; i--) {
+            const brick = bricks[i];
+            const brickX = parseInt(brick.dataset.x);
+            const brickY = parseInt(brick.dataset.y);
+
+            if (
+                ballX + ballRadius * 2 > brickX &&
+                ballX < brickX + brickWidth &&
+                ballY + ballRadius * 2 > brickY &&
+                ballY < brickY + brickHeight
+            ) {
+                // Determine which side of the brick was hit
+                const overlapLeft = ballX + ballRadius * 2 - brickX;
+                const overlapRight = brickX + brickWidth - ballX;
+                const overlapTop = ballY + ballRadius * 2 - brickY;
+                const overlapBottom = brickY + brickHeight - ballY;
+
+                // Find the smallest overlap
+                const minOverlap = Math.min(
+                    overlapLeft, 
+                    overlapRight, 
+                    overlapTop, 
+                    overlapBottom
+                );
+
+                // Adjust ball direction based on the side hit
+                if (minOverlap === overlapLeft
+                 || minOverlap === overlapRight) {
+                    ballSpeedX = -ballSpeedX;
+                } else {
+                    ballSpeedY = -ballSpeedY;
+                }
+
+                brick.remove();
+                bricks.splice(i, 1);
+                score += 10;
+                scoreDisplay.textContent = `Score: ${score}`;
+
+                // Break additional bricks if power-up is active
+                if (isPowerUp) {
+                    breakAdjacentBricks(brickX, brickY);
+                }
+
+                break; // Only handle one collision per frame
+            }
+        }
+    }
+
+    // Break adjacent bricks during power-up
+    function breakAdjacentBricks(x, y) {
+        const adjacentOffsets = [
+            [-1, 0], [1, 0], [0, -1], [0, 1], // Left, Right, Up, Down
+            [-1, -1], [-1, 1], [1, -1], [1, 1] // Diagonals
+        ];
+
+        for (let i = 0; i < adjacentOffsets.length; i++) {
+            const offset = adjacentOffsets[i];
+            const adjX = x + offset[0] * (brickWidth + brickGutter);
+            const adjY = y + offset[1] * (brickHeight + brickGutter);
+
+            for (let i = 0; i < bricks.length; i++) {
+                const brick = bricks[i];
+                if (parseInt(brick.dataset.x) 
+                === adjX && parseInt(brick.dataset.y) === adjY) {
+                    brick.remove();
+                    bricks.splice(i, 1);
+                    score += 10;
+                    break;
+                }
+            }
+        }
+
+        scoreDisplay.textContent = `Score: ${score}`;
+    }
+
+    // Slate movement logic
+    function moveSlate(event) {
+        const gameRect = game.getBoundingClientRect();
+        slateX = Math.max(
+            0, 
+            Math.min(
+                event.clientX 
+                - gameRect.left - slateWidth / 2, gameWidth - slateWidth));
+        updateSlatePosition();
+    }
+
+    // Game loop
+    function gameLoop() {
+        if (!isGameOver && isGameStarted) {
+            moveBall();
+            requestAnimationFrame(gameLoop);
+        }
+    }
+
+    // Start/restart game
+    function startGame() {
+        document.addEventListener('mousemove', moveSlate);
+        isGameStarted = true;
+        gameLoop();
+    }
+
+    // End game logic
+    function endGame() {
+        isGameOver = true;
+        document.removeEventListener('mousemove', moveSlate);
+        scoreDisplay.textContent = `Game Over! Your score: ${score}`;
+    }
+
+    // Win game logic
+    function winGame() {
+        isGameOver = true;
+        document.removeEventListener('mousemove', moveSlate);
+        scoreDisplay.textContent = `You won! Your score: ${score}`;
+    }
+
+    // Update positions of elements
+    function updateBallPosition() {
+        ball.style.left = ballX + 'px';
+        ball.style.top = ballY + 'px';
+    }
+
+    function updateSlatePosition() {
+        slate.style.left = slateX + 'px';
+    }
+
+    // Start game on pressing Enter
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            if (isGameOver || !isGameStarted) {
+                initGame();
+                startGame();
+            }
+        }
+    });
+
+    initGame(); // Initialize game on page load but wait for Enter to start
+</script>
+</body>
+</html>
