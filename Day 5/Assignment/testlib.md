@@ -126,6 +126,4 @@ test(
 //    PASS
 ```
 
-```
-
 Now, you should understand why we needed `assert` function.
