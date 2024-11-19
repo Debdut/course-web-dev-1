@@ -62,8 +62,18 @@ class Node {
 	* @param {"linear" | "conical"} style
 	* @returns {string}
 	*/
-	function treeDiagram(style = "linear") {
-
+	diagram(style = "linear", indent = 0) {
+		let spaces = ""
+		for (var i = 0; i < indent; i++) {
+			spaces += "   "
+		}
+		indent += 1
+		let stringBuilder = String(this.type)
+		for (var i = 0; i < this.children.length; i++) {
+			const child = this.children[i]
+			stringBuilder += `\n${spaces}|__ ${child.diagram("linear", indent)}`
+		}
+		return stringBuilder
 	}
 }
 
@@ -82,12 +92,10 @@ class Node {
 //					1
 //				/	|	\
 //			 2  3  4
-//			 |    / | \
-//			 5   6  7  8
-//			 				|
-//			 				9
-			
-
+//			 |   / | \
+//			 5  6  7  8
+//			 			 |
+//			 			 9
 
 function exampleTree1 () {
 	const node1 = new Node(1)
@@ -115,6 +123,8 @@ function exampleTree1 () {
 
 
 function main() {
-	
-
+	const tree = exampleTree1()
+	console.log(tree.diagram())
 }
+
+main()
