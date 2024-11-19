@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+
 class Node {
 	/*
 	* @param {string | number} type
@@ -122,10 +124,52 @@ function exampleTree1 () {
 	return node1
 }
 
+/*
+	* @param {String} dir
+	* @returns {Node}
+	*/
+function createFileTree(dir) {
+	// take the part of the string before last /
+	let dirName = ""
+	for(let i = dir.length-1; i >= 0; i--) {
+		if(dir[i] === "/") {
+			break
+		} else {
+			dirName = dir[i] + dirName
+		}
+	}
+	// pre order recursion
+	const parentNode = new Node(dirName)
+	const files = fs.readdirSync(dir)
+		.filter(value => value.charAt(0) !== "." )
+	files.sort()
+	for(let i = 0; i < files.length; i++) {
+		let childNode
+		const file = files[i]
+		const filePath = `${dir}/${file}`
+		const isDirectory = fs.lstatSync(filePath).isDirectory()
+		if(isDirectory) {
+			childNode = createFileTree(filePath)
+		} else {
+			childNode = new Node(file)
+		}
+		parentNode.appendChild(childNode)
+	}
+	return parentNode
+}
 
 function main() {
-	const tree = exampleTree1()
-	console.log(tree.diagram())
+	// const tree = exampleTree1()
+	// console.log(tree.diagram())
+
+	 const dir = "../.."
+	// const files = fs.readdirSync(dir)
+	// for (var i = 0; i < files.length; i++) {
+	// 	const file = files[i]
+	// 	//console.log(file, fs.lstatSync(`${dir}/${file}`).isDirectory())
+	// }
+	const fileTree = createFileTree(dir)
+	console.log(fileTree.diagram())
 }
 
 main()
