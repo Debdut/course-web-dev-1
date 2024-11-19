@@ -65,13 +65,14 @@ class Node {
 	diagram(style = "linear", indent = 0) {
 		let spaces = ""
 		for (var i = 0; i < indent; i++) {
-			spaces += "   "
+			spaces += "    "
 		}
 		indent += 1
 		let stringBuilder = String(this.type)
 		for (var i = 0; i < this.children.length; i++) {
 			const child = this.children[i]
-			stringBuilder += `\n${spaces}|__ ${child.diagram("linear", indent)}`
+			const childTreeDiagram = child.diagram("linear", indent)
+			stringBuilder += `\n${spaces}└── ${childTreeDiagram}`
 		}
 		return stringBuilder
 	}
@@ -79,14 +80,14 @@ class Node {
 
 // Linear Representation
 // 1
-// |__ 2
-// 		|__ 5
-// |__ 3
-// |__ 4
-// 		|__ 6
-// 		|__ 7
-// 		|__ 8
-// 			|__ 9
+// |__2
+//    |__5
+// |__3
+// |__4
+//    |__6
+//    |__7
+//       |__9
+//    |__8
 
 // Conical Representation
 //					1
