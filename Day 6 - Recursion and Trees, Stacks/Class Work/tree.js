@@ -16,6 +16,10 @@ class Node {
         this.data = data;
         this.parentNode = parentNode;
         this.children = children;
+		for (let i = 0; i < children.length; i++) {
+			const child = children[i]
+			child.parentNode = this
+		}
     }
 
     /**
@@ -24,8 +28,8 @@ class Node {
      * @returns {void}
      */
     appendChild(node) {
-        this.children.push(node);
-        node.parentNode = this;
+        this.children.push(node)
+        node.parentNode = this
     }
 
     /**
@@ -128,7 +132,7 @@ class Node {
 	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each node, or null.
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
-	 preOrder(f) {
+	preOrder(f) {
 		// TODO
     }
 
@@ -297,4 +301,4 @@ function expect(val1) {
 	}
 }
 
-main()
+// main()
