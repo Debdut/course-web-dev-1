@@ -1,10 +1,10 @@
-// const balls = document.querySelectorAll("div.ball")
-// console.log(balls)
+const balls = document.querySelectorAll("div.ball")
+console.log(balls)
 
-// const ball = document.querySelector("div.ball")
-// console.log(ball)
+const ball = document.querySelector("div.ball")
+console.log(ball)
 
-// let pos = { left: 50, top: 50 }
+let pos = { left: 50, top: 50 }
 
 // ball.style = "width: 100px;"
 
@@ -32,10 +32,10 @@
 
 // setInterval(moveBall, 1000/60)
 
-function updatePosition(element, pos) {
-    element.style.top = `${pos.top}px`
-    element.style.left = `${pos.left}px`
-}
+// function updatePosition(element, pos) {
+//     element.style.top = `${pos.top}px`
+//     element.style.left = `${pos.left}px`
+// }
 
 // // updatePosition(ball, pos)
 
@@ -99,43 +99,43 @@ function updatePosition(element, pos) {
 //     }
 // }
 
-function createBall(height, isBorder, color, pos) {
-    const ball = document.createElement("div")
-    ball.style.height = `${height}px`
-    ball.style.width = ball.style.height
-    if (isBorder) {
-        ball.style.border = "5px solid black"
-    }
-    ball.style.backgroundColor = color
-    ball.style.position = "absolute"
-    ball.style.borderRadius = "50%"
+// function createBall(height, isBorder, color, pos) {
+//     const ball = document.createElement("div")
+//     ball.style.height = `${height}px`
+//     ball.style.width = ball.style.height
+//     if (isBorder) {
+//         ball.style.border = "5px solid black"
+//     }
+//     ball.style.backgroundColor = color
+//     ball.style.position = "absolute"
+//     ball.style.borderRadius = "50%"
 
-    updatePosition(ball, pos)
+//     updatePosition(ball, pos)
 
-    document.body.appendChild(ball)
-}
+//     document.body.appendChild(ball)
+// }
 
-function createRandomBall(pos) {
-    const height = Math.random() * 250 + 50
-    const isBorder = Math.random() > 0.5
-    const red = Math.random() * 255
-    const green = Math.random() * 255
-    const blue = Math.random() * 255
-    const alpha = 0.3 + Math.random() * 0.4
-    const color = `rgba(${red}, ${green}, ${blue}, ${alpha})`
+// function createRandomBall(pos) {
+//     const height = Math.random() * 250 + 50
+//     const isBorder = Math.random() > 0.5
+//     const red = Math.random() * 255
+//     const green = Math.random() * 255
+//     const blue = Math.random() * 255
+//     const alpha = 0.3 + Math.random() * 0.4
+//     const color = `rgba(${red}, ${green}, ${blue}, ${alpha})`
 
-    const radius =  height / 2
-    pos.top -= radius
-    pos.left -= radius
+//     const radius =  height / 2
+//     pos.top -= radius
+//     pos.left -= radius
 
-    createBall(height, isBorder, color, pos)
-}
+//     createBall(height, isBorder, color, pos)
+// }
 
-document.onclick = function (event) {
-    const pos = {
-        top: event.clientY,
-        left: event.clientX
-    }
+// document.onclick = function (event) {
+//     const pos = {
+//         top: event.clientY,
+//         left: event.clientX
+//     }
 
-    createRandomBall(pos)
-}
+//     createRandomBall(pos)
+// }
