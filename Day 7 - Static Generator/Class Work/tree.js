@@ -8,10 +8,10 @@ class Node {
      * @constructor
      * @param {string | number} type - The type or identifier for the node.
      * @param {*} data - The data stored in the node.
-     * @param {Node} [parentNode=null] - The parent node of this node.
+     * @param {Node} [parentNode=undefined] - The parent node of this node.
      * @param {Node[]} [children=[]] - The children nodes of this node.
      */
-    constructor(type, data, parentNode = null, children = []) {
+    constructor(type, data, parentNode = undefined, children = []) {
         this.type = type;
         this.data = data;
         this.parentNode = parentNode;
@@ -34,28 +34,28 @@ class Node {
 
     /**
      * Returns the previous sibling of this node, if it exists.
-     * @returns {Node|null} The previous sibling node or null if none exists.
+     * @returns {Node|undefined} The previous sibling node or undefined if none exists.
      */
     previousSibling() {
         if (this.parentNode) {
             const siblings = this.parentNode.children;
             const index = siblings.indexOf(this);
-            return index > 0 ? siblings[index - 1] : null;
+            return index > 0 ? siblings[index - 1] : undefined;
         }
-        return null;
+        return undefined;
     }
 
     /**
      * Returns the next sibling of this node, if it exists.
-     * @returns {Node|null} The next sibling node or null if none exists.
+     * @returns {Node|undefined} The next sibling node or undefined if none exists.
      */
     nextSibling() {
         if (this.parentNode) {
             const siblings = this.parentNode.children;
             const index = siblings.indexOf(this);
-            return index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : null;
+            return index >= 0 && index < siblings.length - 1 ? siblings[index + 1] : undefined;
         }
-        return null;
+        return undefined;
     }
 
     /**
@@ -110,7 +110,7 @@ class Node {
 	 * 4   5   6
 	 * returns [4, 2, 5, 1, 3, 6]
 	 * See in-order explanation at: https://media.geeksforgeeks.org/wp-content/uploads/20240429124538/Preorder-Traversal-of-Binary-Tree.webp
-	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each node, or null.
+	 * @param {(function(Node): any) | undefined} f - A callback function to execute on each node, or undefined.
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
     inOrder(f) {
@@ -160,7 +160,7 @@ class Node {
 	 * 4   5   6
 	 * returns [1, 2, 4, 5, 3, 6]
 	 * See in-order explanation at: https://media.geeksforgeeks.org/wp-content/uploads/20240429124832/Inorder-Traversal-of-Binary-Tree.webp
-	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each node, or null.
+	 * @param {(function(Node): any) | undefined} f - A callback function to execute on each node, or undefined.
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
 	preOrder(f) {
@@ -196,7 +196,7 @@ class Node {
 	 * 4   5   6
 	 * returns [4, 5, 2, 6, 3, 1]
 	 * See in-order explanation at: https://media.geeksforgeeks.org/wp-content/uploads/20240429125100/Postorder-Traversal-of-Binary-Tree.webp
-	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each node, or null.
+	 * @param {(function(Node): any) | undefined} f - A callback function to execute on each node, or undefined.
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
 	postOrder(f) {
@@ -233,11 +233,45 @@ class Node {
 	 *        4   5   6
 	 * returns [1, 2, 3, 4, 5, 6]
 	 * See in-order explanation at: https://media.geeksforgeeks.org/wp-content/uploads/20240429134701/Level-Order-Traversal-of-Binary-Tree.webp
-	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each node, or null.
+	 * @param {(function(Node): any) | undefined} f - A callback function to execute on each node, or undefined.
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
 	levelOrder(f) {
-		// TODO
+		let result = []
+		let parents = []
+
+		if (f) {
+			result.push(f(this))
+			parents.push(this)
+
+			while (parents.length > 0) {
+				let children = []
+				for (var i = 0; i < parents.length; i++) {
+					const parent = parents[i]
+					children.push(...parent.children)
+				}
+				for (var i = 0; i < children.length; i++) {
+					const child = children[i]
+					result.push(f(child))
+				}
+				parents = children
+			}
+		} else {
+			result.push(this)
+			parents.push(this)
+
+			while (parents.length > 0) {
+				let children = []
+				for (var i = 0; i < parents.length; i++) {
+					const parent = parents[i]
+					children.push(...parent.children)
+				}
+				result.push(...children)
+				parents = children
+			}
+		}
+
+		return result
     }
 
 	/**
@@ -254,28 +288,73 @@ class Node {
 	 * 			 	   |
 	 * 				   9 
 	 * returns [5, 3. 6, 9, 8]
-	 * @param {function(Node): any | null} [f=null] - A callback function to execute on each leaf node, or null.
+	 * @param {(function(Node): any) | undefined} f - A callback function to execute on each leaf node, or undefined.
 	 * @returns {Node[] | any[]} If a callback is provided, an array of results from the function applied on the leaf nodes is returned. If no callback is provided, an array of leaf nodes is returned.
 	 */
 	leaves(f) {
-		// TODO
+		const nodes = this.preOrder()
+		const leaves = []
+		if (f) {
+			for (let i = 0; i < nodes.length; i++) {
+				const node = nodes[i]
+				if (node.children.length === 0) {
+					leaves.push(f(node))
+				}
+			}
+		} else {
+			for (let i = 0; i < nodes.length; i++) {
+				const node = nodes[i]
+				if (node.children.length === 0) {
+					leaves.push(node)
+				}
+			}
+		}
 	}
 
 	/**
 	 * Searches the tree rooted at this node for nodes that satisfy a given condition.
-	 * If the count parameter is null, the method returns all nodes that satisfy the condition.
+	 * If the count parameter is undefined, the method returns all nodes that satisfy the condition.
 	 * If the count parameter is provided, the search terminates after finding the specified number of matching nodes.
 	 *
 	 * @param {function(Node): boolean} condition - A function that takes a node and returns a boolean indicating whether the node satisfies the condition.
-	 * @param {number | null} [count=null] - The maximum number of matching nodes to return. If null, all matching nodes are returned.
+	 * @param {number | undefined} count - The maximum number of matching nodes to return. If undefined, all matching nodes are returned.
+	 * * @param {(function(Node): any) | undefined} f - A callback function to execute on each searched node, or undefined.
 	 * @returns {Node[]} An array of nodes that satisfy the condition.
 	 */
-	search(condition, count = null) {
-		// TODO: Implement the search logic
+	search(condition, count, f) {
+		const nodes = this.preOrder()
+		let result = []
+		if (count) {
+			for (let i = 0; i < nodes.length; i++) {
+				const node = nodes[i]
+				if (condition(node)) {
+					result.push(node)
+				}
+			}
+		} else {
+			let found = 0
+			for (let i = 0; i < nodes.length; i++) {
+				const node = nodes[i]
+				if (condition(node)) {
+					result.push(node)
+					found++
+				}
+				if (found === count) {
+					break
+				}
+			}
+		}
+
+		if (f) {
+			for (let i = 0; i < result.length; i++) {
+				f(result[i])
+			}
+		}
+		return result
 	}
 }
 
-export default Node;
+export default Node
 
 /**
  * Creates a tree
@@ -340,7 +419,7 @@ function main() {
 
 	// Search even nodes
 	expect(
-		tree.search(x => x.type.type % 2 === 0)
+		tree.search(x => x.type % 2 === 0, null, x => x.type)
 	)
 		.toBe([2, 4, 6, 8])
 }
