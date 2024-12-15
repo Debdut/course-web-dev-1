@@ -114,7 +114,38 @@ class Node {
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
     inOrder(f) {
-		// TODO
+		let result = []
+
+		if (this.children.length > 0) {
+			const firstChild = this.children[0]
+			if (f) {
+				result.concat(firstChild.inOrder(f))
+
+				result.push(f(this))
+
+				for (let i = 1; i < this.children.length; i++) {
+					const child = this.children[i]
+					result.concat(child.inOrder(f))
+				}
+			} else {
+				result.concat(firstChild.inOrder())
+
+				result.push(this)
+				
+				for (let i = 1; i < this.children.length; i++) {
+					const child = this.children[i]
+					result.concat(child.inOrder())
+				}
+			}
+		} else {
+			if (f) {
+				result.push(f(this))
+			} else {
+				result.push(this)
+			}
+		}
+		
+		return result
     }
 
 	 /**
@@ -133,7 +164,24 @@ class Node {
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
 	preOrder(f) {
-		// TODO
+		let result = []
+
+		if (f) {
+			result.push(f(this))
+
+			for (let i = 0; i < this.children.length; i++) {
+				const child = this.children[i]
+				result.concat(child.preOrder(f))
+			}
+		} else {
+			result.push(this)
+			for (let i = 0; i < this.children.length; i++) {
+				const child = this.children[i]
+				result.concat(child.preOrder())
+			}
+		}
+		
+		return result
     }
 
 	/**
@@ -152,7 +200,25 @@ class Node {
 	 * @returns {Node[] | any[]} If a callback is provided, nothing is returned. If no callback is provided, an array of nodes is returned.
 	 */
 	postOrder(f) {
-		// TODO
+		let result = []
+		
+		if (f) {
+			for (let i = 0; i < this.children.length; i++) {
+				const child = this.children[i]
+				result.concat(child.postOrder(f))
+			}
+
+			result.push(f(this))
+		} else {
+			for (let i = 0; i < this.children.length; i++) {
+				const child = this.children[i]
+				result.concat(child.postOrder())
+			}
+
+			result.push(this)
+		}
+		
+		return result
     }
 
 	/**
