@@ -119,22 +119,22 @@ class Node {
 		if (this.children.length > 0) {
 			const firstChild = this.children[0]
 			if (f) {
-				result.concat(firstChild.inOrder(f))
+				result = result.concat(firstChild.inOrder(f))
 
 				result.push(f(this))
 
 				for (let i = 1; i < this.children.length; i++) {
 					const child = this.children[i]
-					result.concat(child.inOrder(f))
+					result = result.concat(child.inOrder(f))
 				}
 			} else {
-				result.concat(firstChild.inOrder())
+				result = result.concat(firstChild.inOrder())
 
 				result.push(this)
 				
 				for (let i = 1; i < this.children.length; i++) {
 					const child = this.children[i]
-					result.concat(child.inOrder())
+					result = result.concat(child.inOrder())
 				}
 			}
 		} else {
@@ -171,13 +171,13 @@ class Node {
 
 			for (let i = 0; i < this.children.length; i++) {
 				const child = this.children[i]
-				result.concat(child.preOrder(f))
+				result = result.concat(child.preOrder(f))
 			}
 		} else {
 			result.push(this)
 			for (let i = 0; i < this.children.length; i++) {
 				const child = this.children[i]
-				result.concat(child.preOrder())
+				result = result.concat(child.preOrder())
 			}
 		}
 		
@@ -205,14 +205,14 @@ class Node {
 		if (f) {
 			for (let i = 0; i < this.children.length; i++) {
 				const child = this.children[i]
-				result.concat(child.postOrder(f))
+				result = result.concat(child.postOrder(f))
 			}
 
 			result.push(f(this))
 		} else {
 			for (let i = 0; i < this.children.length; i++) {
 				const child = this.children[i]
-				result.concat(child.postOrder())
+				result = result.concat(child.postOrder())
 			}
 
 			result.push(this)
@@ -316,31 +316,31 @@ function main() {
 	console.log(tree.diagram())
 
 	// In Order
-	expect(tree.inOrder())
-		.toBe([5, 2, 1, 3, 4, 6, 7, 9, 8])
+	expect(tree.inOrder(e => e.type))
+		.toBe([5, 2, 1, 3, 6, 4, 9, 7, 8])
 
 	// Pre Order
 	expect(
-		tree.preOrder(x => x**2)
+		tree.preOrder(x => x.type**2)
 	)
 		.toBe([1, 4, 25, 9, 16, 36, 49, 81, 64])
 	
 	// Post Order
-	expect(tree.postOrder())
-		.toBe([5, 2, 6, 9, 7, 8, 4, 3, 1])
+	expect(tree.postOrder(e => e.type))
+		.toBe([5, 2, 3, 6, 9, 7, 8, 4, 1])
 
 	
-	// Leve; Order
-	expect(tree.levelOrder())
+	// Level Order
+	expect(tree.levelOrder(e => e.type))
 		.toBe([1, 2, 3, 4, 5, 6, 7, 8, 9])
 	
 	// Leaves
-	expect(tree.inOrder())
+	expect(tree.leaves(e => e.type))
 		.toBe([5, 3, 6, 9, 8])
 
 	// Search even nodes
 	expect(
-		tree.search(x => x.type % 2 === 0)
+		tree.search(x => x.type.type % 2 === 0)
 	)
 		.toBe([2, 4, 6, 8])
 }
@@ -360,11 +360,11 @@ function expect(val1) {
 				console.log("Pass")
 			} else {
 				console.log("Fail")
-				console.log("Expected: ", coVal1)
-				console.log("Output: ", coVal2)
+				console.log("Expected: ", coVal2)
+				console.log("Output: ", coVal1)
 			}
 		}
 	}
 }
 
-// main()
+main()
