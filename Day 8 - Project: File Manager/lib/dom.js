@@ -201,7 +201,7 @@ function AttrtoString(name, value) {
       if (Array.isArray(value)) {
         stringBuilder += value.join(", ");
       } else {
-        stringBuilder += `${keys[0]}: ${value[keys[0]]}`;
+        stringBuilder += `${toCamelCase(keys[0])}: ${value[keys[0]]}`;
 
         for (let i = 1; i < keys.length; i++) {
           let key = keys[i];
