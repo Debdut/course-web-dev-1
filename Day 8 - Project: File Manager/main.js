@@ -2,11 +2,11 @@ console.log("[main.js]")
 
 import { tags } from "/lib/dom.js"
 
-const { div, h1, h2, p, span } = tags
+const { div, h1, h2, p, span, li, ul } = tags
 
-document.body.innerHTML = FolderView(["Applications", "Desktop", "Documents", "Downloads", "Public", "Temp"]).toHTML()
-document.body.style.backgroundColor = "rgb(30, 30, 30)"
-document.body.style.padding= "50px"
+// document.body.innerHTML = FolderView(["Applications", "Desktop", "Documents", "Downloads", "Public", "Temp"]).toHTML()
+// document.body.style.backgroundColor = "rgb(30, 30, 30)"
+// document.body.style.padding= "50px"
 
 function Folder (name) {
   return div({ class: "folder"},
@@ -27,3 +27,32 @@ function FolderView(folders) {
     ...folders.map(Folder)
   )
 }
+
+
+
+function TodosApp (todos) {
+  return div(
+    h1("Todos"),
+    ul(
+      ...todos.map(TodoItem)
+    )
+  )
+}
+
+function TodoItem (todo) {
+  return li(todo)
+}
+
+const todos = [
+  "Wake up at 7",
+  "Go to the gym",
+  "Go to office",
+  "Go to the market",
+  "Go to the party",
+  "Go to the restaurant",
+  "Go to the cinema",
+  "Go to the library",
+  "Sleep"
+]
+
+document.body.innerHTML = TodosApp(todos).toHTML()
