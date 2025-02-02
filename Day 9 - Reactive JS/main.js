@@ -79,4 +79,3 @@ function DirContainerView (dir) {
 import { ROOT, Dir, File } from "/pkg/filetree.js"
 
 add(document.body, DirContainerView(ROOT))
-
