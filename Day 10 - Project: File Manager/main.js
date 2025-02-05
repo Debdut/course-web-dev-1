@@ -2,7 +2,7 @@ console.log("[main.js]")
 
 import dom from "/lib/dom.js"
 
-const { add, tags } = dom
+const { add, tags, state } = dom
 const { div, h1, a } = tags
 
 const COLORS = {
@@ -10,12 +10,14 @@ const COLORS = {
   lightGrey: "rgb(70, 70, 70)",
 }
 
+import { ROOT, Dir, File } from "/pkg/filetree.js"
+
 document.body.style.backgroundColor = COLORS.darkGrey
 document.body.style.color = "white"
 
-
-function DirView (dir) {
-  return div({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" }},
+function DirView (dir, changeDir) {
+  return a({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" },
+    onclick: changeDir },
       div({ style: {
       backgroundColor: "rgb(100, 200, 250)",
       display: "inline-block",
@@ -67,15 +69,20 @@ function FileView (file) {
   )
 }
 
-function DirContainerView (dir) {
+const DirState = state(ROOT)
+
+function DirContainerView () {
+  console.log("rendering")
+  function changeDir (dir) {
+    DirState.val = dir
+    console.log(Dir)
+  }
   return div({ class: "dir-view"},
-    DirHeader(dir),
+    DirHeader(DirState.val),
     div({ class: "Dirs" },
-      ...dir.children.map(node => (node instanceof Dir) ? DirView(node): FileView(node) )
+      ...DirState.val.children.map(node => (node instanceof Dir) ? DirView(node, () => changeDir(node)): FileView(node) )
     )
   )
 }
 
-import { ROOT, Dir, File } from "/pkg/filetree.js"
-
-add(document.body, DirContainerView(ROOT))
+add(document.body, DirContainerView())
