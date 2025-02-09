@@ -1,8 +1,8 @@
 console.log("[main.js]")
 
-import dom from "/lib/dom.js"
+import { render } from "preact"
+import { tags } from "/lib/dom.js"
 
-const { add, tags, state } = dom
 const { div, h1, a } = tags
 
 const COLORS = {
@@ -15,9 +15,8 @@ import { ROOT, Dir, File } from "/pkg/filetree.js"
 document.body.style.backgroundColor = COLORS.darkGrey
 document.body.style.color = "white"
 
-function DirView (dir, changeDir) {
-  return a({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" },
-    onclick: changeDir },
+function DirView (dir) {
+  return a({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" } },
       div({ style: {
       backgroundColor: "rgb(100, 200, 250)",
       display: "inline-block",
@@ -69,20 +68,13 @@ function FileView (file) {
   )
 }
 
-const DirState = state(ROOT)
-
-function DirContainerView () {
-  console.log("rendering")
-  function changeDir (dir) {
-    DirState.val = dir
-    console.log(Dir)
-  }
+function DirContainerView (dir) {
   return div({ class: "dir-view"},
-    DirHeader(DirState.val),
+    DirHeader(dir),
     div({ class: "Dirs" },
-      ...DirState.val.children.map(node => (node instanceof Dir) ? DirView(node, () => changeDir(node)): FileView(node) )
+      ...dir.children.map(node => (node instanceof Dir) ? DirView(node, () => changeDir(node)): FileView(node) )
     )
   )
 }
 
-add(document.body, DirContainerView())
+render(DirContainerView(ROOT), document.body)
