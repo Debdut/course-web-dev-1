@@ -1,7 +1,8 @@
 console.log("[main.js]")
 
-import { render } from "preact"
+import { h, render } from "preact"
 import { tags } from "/lib/dom.js"
+import { useState } from "preact/hooks"
 
 const { div, h1, a } = tags
 
@@ -15,8 +16,8 @@ import { ROOT, Dir, File } from "/pkg/filetree.js"
 document.body.style.backgroundColor = COLORS.darkGrey
 document.body.style.color = "white"
 
-function DirView (dir) {
-  return a({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" } },
+function DirView (dir, changeDir) {
+  return a({ class: "dir", style: { display: "inline-block", marginLeft: "40px", marginBottom: "40px" }, onClick: changeDir},
       div({ style: {
       backgroundColor: "rgb(100, 200, 250)",
       display: "inline-block",
@@ -28,19 +29,19 @@ function DirView (dir) {
   )
 }
 
-function DirHeader (dir) {
+function DirHeader (dir, changeDir) {
   return div({ class: "dir-header", style: {
     marginBottom: "50px",
     padding: "10px",
   } },
-    HeaderBtn("<"),
+    HeaderBtn("<", {}, () => changeDir(dir.parent || dir)),
     HeaderBtn(">"),
     h1({ style: { fontSize: "30px", fontWeight: 400, display: "inline-block", margin: 0 }}, dir.name),
     HeaderBtn("+", { float: "right", marginRight: 0 }),
   )
 }
 
-function HeaderBtn (icon, styles) {
+function HeaderBtn (icon, styles, onClick) {
   return a({
     style: { 
       fontSize: "30px",
@@ -52,7 +53,8 @@ function HeaderBtn (icon, styles) {
       opacity: 0.7,
       marginRight: "12px",
        ...styles
-    }
+    },
+    onClick: onClick,
   }, icon)
 }
 
@@ -68,13 +70,14 @@ function FileView (file) {
   )
 }
 
-function DirContainerView (dir) {
+function DirContainerView () {
+  const [dir, changeDir] = useState(ROOT)
   return div({ class: "dir-view"},
-    DirHeader(dir),
+    DirHeader(dir, changeDir),
     div({ class: "Dirs" },
       ...dir.children.map(node => (node instanceof Dir) ? DirView(node, () => changeDir(node)): FileView(node) )
     )
   )
 }
 
-render(DirContainerView(ROOT), document.body)
+render(h(DirContainerView), document.body)
