@@ -38,12 +38,14 @@ function DirHeader (dir, nextDir, back, forward) {
     padding: "10px",
   } },
     HeaderBtn("<",
-      { opacity: isBackDisabled? .7: 1 },
-      back
+      {},
+      back,
+      isBackDisabled
     ),
     HeaderBtn(">",
-      { opacity: isForwardDisabled? .7: 1},
-      forward
+      {},
+      forward,
+      isForwardDisabled
     ),
     h1({
         style: { 
@@ -59,7 +61,7 @@ function DirHeader (dir, nextDir, back, forward) {
   )
 }
 
-function HeaderBtn (icon, styles, onClick) {
+function HeaderBtn (icon, styles, onClick, isDisabled) {
   return a({
     style: { 
       fontSize: "30px",
@@ -69,9 +71,10 @@ function HeaderBtn (icon, styles, onClick) {
       padding: "4px 10px",
       borderRadius: "4px",
       marginRight: "12px",
+      opacity: isDisabled? .7: 1,
        ...styles
     },
-    onClick: onClick,
+    onClick: isDisabled ? null : onClick,
   }, icon)
 }
 
@@ -100,6 +103,7 @@ function DirContainerView () {
   function back() {
     setDir(dir.parent)
     setNextDir(nextIntermediateDir)
+    setNextIntermediateDir(dir.parent)
   }
 
   function forward() {
