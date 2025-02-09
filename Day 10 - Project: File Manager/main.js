@@ -29,14 +29,32 @@ function DirView (dir, changeDir) {
   )
 }
 
-function DirHeader (dir, changeDir) {
+function DirHeader (dir, nextDir, back, forward) {
+  const isBackDisabled = dir === ROOT
+  const isForwardDisabled = nextDir === null
+
   return div({ class: "dir-header", style: {
     marginBottom: "50px",
     padding: "10px",
   } },
-    HeaderBtn("<", {}, () => changeDir(dir.parent || dir)),
-    HeaderBtn(">"),
-    h1({ style: { fontSize: "30px", fontWeight: 400, display: "inline-block", margin: 0 }}, dir.name),
+    HeaderBtn("<",
+      { opacity: isBackDisabled? .7: 1 },
+      back
+    ),
+    HeaderBtn(">",
+      { opacity: isForwardDisabled? .7: 1},
+      forward
+    ),
+    h1({
+        style: { 
+          fontSize: "30px", 
+          fontWeight: 400, 
+          display: "inline-block", 
+          margin: 0 
+        }
+      }, 
+      dir.name
+    ),
     HeaderBtn("+", { float: "right", marginRight: 0 }),
   )
 }
@@ -50,7 +68,6 @@ function HeaderBtn (icon, styles, onClick) {
       backgroundColor: COLORS.lightGrey,
       padding: "4px 10px",
       borderRadius: "4px",
-      opacity: 0.7,
       marginRight: "12px",
        ...styles
     },
@@ -71,11 +88,32 @@ function FileView (file) {
 }
 
 function DirContainerView () {
-  const [dir, changeDir] = useState(ROOT)
+  const [dir, setDir] = useState(ROOT)
+  const [nextIntermediateDir, setNextIntermediateDir] = useState(null)
+  const [nextDir, setNextDir] = useState(null)
+
+  function changeDir (dir) {
+    setDir(dir)
+    setNextIntermediateDir(dir)
+  }
+
+  function back() {
+    setDir(dir.parent)
+    setNextDir(nextIntermediateDir)
+  }
+
+  function forward() {
+    setDir(nextDir)
+    setNextIntermediateDir(nextDir)
+    setNextDir(null)
+  }
+
   return div({ class: "dir-view"},
-    DirHeader(dir, changeDir),
+    DirHeader(dir, nextDir, back, forward),
     div({ class: "Dirs" },
-      ...dir.children.map(node => (node instanceof Dir) ? DirView(node, () => changeDir(node)): FileView(node) )
+      ...dir.children.map(node => (node instanceof Dir)
+       ? DirView(node, () => changeDir(node))
+       : FileView(node) )
     )
   )
 }
